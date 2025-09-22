@@ -32,7 +32,6 @@ const SolarSystemSimulation: React.FC = () => {
   const planetsRef = useRef<any[]>([]);
   const texturesRef = useRef<Record<string, THREE.Texture>>({});
   const initializedRef = useRef(false); // guard against React StrictMode double effect
-  const [textureDebug, setTextureDebug] = useState<Record<string,string>>({});
   
   const isAnimatingRef = useRef(true);
   const animationSpeedRef = useRef(1);
@@ -47,14 +46,15 @@ const SolarSystemSimulation: React.FC = () => {
 
   const planetData: PlanetData[] = [
   // Adjusted speeds: still progressively slower outward, but inner planets reduced to avoid extreme fast orbit
-  { name: 'Mercury', radius: 3.5 * PLANET_SCALE, distance: 35, speed: 1.8, color: 0x8c7853, info: "Closest planet to the Sun. Surface temperatures range from -290°F to 800°F.", moons: 0, textureColors: { base: 0x8c7853, secondary: 0x5d4e37 }},
-  { name: 'Venus', radius: 4.8 * PLANET_SCALE, distance: 50, speed: 1.15, color: 0xffc649, info: "Hottest planet in our solar system. Thick atmosphere of carbon dioxide.", moons: 0, textureColors: { base: 0xffc649, atmosphere: 0xffaa33 }},
-  { name: 'Earth', radius: 5.0 * PLANET_SCALE, distance: 70, speed: 0.85, color: 0x228b22, info: "Our home planet. Only known planet with life. 71% water coverage.", moons: 1, textureColors: { base: 0x228b22, secondary: 0x4169e1, atmosphere: 0x87ceeb }},
-  { name: 'Mars', radius: 4.2 * PLANET_SCALE, distance: 95, speed: 0.42, color: 0xcd5c5c, info: "The Red Planet. Has the largest volcano in the solar system.", moons: 2, textureColors: { base: 0xcd5c5c, secondary: 0x8b4513 }},
-    { name: 'Jupiter', radius: 15 * PLANET_SCALE, distance: 150, speed: 0.084, color: 0xd2b48c, info: "Largest planet. Great Red Spot is a giant storm larger than Earth.", moons: 79, textureColors: { base: 0xd2b48c, secondary: 0xdaa520 }},
-    { name: 'Saturn', radius: 13 * PLANET_SCALE, distance: 190, speed: 0.034, color: 0xfad5a5, info: "Famous for its beautiful ring system. Less dense than water.", moons: 82, textureColors: { base: 0xfad5a5, secondary: 0xf4a460 }},
-    { name: 'Uranus', radius: 8 * PLANET_SCALE, distance: 230, speed: 0.012, color: 0x4fd0e3, info: "Ice giant tilted on its side. Rotates almost perpendicular to its orbit.", moons: 27, textureColors: { base: 0x4fd0e3, atmosphere: 0x40e0d0 }},
-    { name: 'Neptune', radius: 7.5 * PLANET_SCALE, distance: 270, speed: 0.006, color: 0x4b70dd, info: "Windiest planet with speeds up to 1,200 mph. Deep blue color from methane.", moons: 14, textureColors: { base: 0x4b70dd, atmosphere: 0x1e90ff }}
+  // Increased orbit distances for better planet visibility and spacing
+  { name: 'Mercury', radius: 3.5 * PLANET_SCALE, distance: 80, speed: 1.8, color: 0x8c7853, info: "Closest planet to the Sun. Surface temperatures range from -290°F to 800°F.", moons: 0, textureColors: { base: 0x8c7853, secondary: 0x5d4e37 }},
+  { name: 'Venus', radius: 4.8 * PLANET_SCALE, distance: 110, speed: 1.15, color: 0xffc649, info: "Hottest planet in our solar system. Thick atmosphere of carbon dioxide.", moons: 0, textureColors: { base: 0xffc649, atmosphere: 0xffaa33 }},
+  { name: 'Earth', radius: 5.0 * PLANET_SCALE, distance: 140, speed: 0.85, color: 0x228b22, info: "Our home planet. Only known planet with life. 71% water coverage.", moons: 1, textureColors: { base: 0x228b22, secondary: 0x4169e1, atmosphere: 0x87ceeb }},
+  { name: 'Mars', radius: 4.2 * PLANET_SCALE, distance: 175, speed: 0.42, color: 0xcd5c5c, info: "The Red Planet. Has the largest volcano in the solar system.", moons: 2, textureColors: { base: 0xcd5c5c, secondary: 0x8b4513 }},
+    { name: 'Jupiter', radius: 15 * PLANET_SCALE, distance: 230, speed: 0.084, color: 0xd2b48c, info: "Largest planet. Great Red Spot is a giant storm larger than Earth.", moons: 79, textureColors: { base: 0xd2b48c, secondary: 0xdaa520 }},
+    { name: 'Saturn', radius: 13 * PLANET_SCALE, distance: 290, speed: 0.034, color: 0xfad5a5, info: "Famous for its beautiful ring system. Less dense than water.", moons: 82, textureColors: { base: 0xfad5a5, secondary: 0xf4a460 }},
+    { name: 'Uranus', radius: 8 * PLANET_SCALE, distance: 350, speed: 0.012, color: 0x4fd0e3, info: "Ice giant tilted on its side. Rotates almost perpendicular to its orbit.", moons: 27, textureColors: { base: 0x4fd0e3, atmosphere: 0x40e0d0 }},
+    { name: 'Neptune', radius: 7.5 * PLANET_SCALE, distance: 410, speed: 0.006, color: 0x4b70dd, info: "Windiest planet with speeds up to 1,200 mph. Deep blue color from methane.", moons: 14, textureColors: { base: 0x4b70dd, atmosphere: 0x1e90ff }}
   ];
 
   // Mapping of planet names to texture asset paths (place your images in public/solar-textures)
@@ -303,7 +303,6 @@ const SolarSystemSimulation: React.FC = () => {
               if (i >= attempts.length) {
                 if (!loaded) {
                   console.warn(`[Textures] MISS ${planetName} (tried: ${attempts.join(', ')})`);
-                  setTextureDebug(prev => ({...prev, [planetName]: 'fallback'}));
                 }
                 return resolve();
               }
@@ -318,7 +317,6 @@ const SolarSystemSimulation: React.FC = () => {
                 tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
                 texturesRef.current[planetName] = tex;
                 console.info(`[Textures] HIT  ${planetName} -> ${path}`);
-                setTextureDebug(prev => ({...prev, [planetName]: path}));
                 // Hot swap if planet already exists with fallback material
                 const planetObj = planetsRef.current.find((p: any) => p.data?.name === planetName);
                 if (planetObj && planetObj.mesh && planetObj.mesh.material) {
@@ -812,28 +810,6 @@ const SolarSystemSimulation: React.FC = () => {
           Loading Solar System...
         </div>
       )}
-      <div style={{
-        position: 'absolute',
-        top: 20,
-        right: 20,
-        color: '#fff',
-        fontFamily: 'Arial, sans-serif',
-        fontSize: '14px',
-        zIndex: 100
-      }}>
-        <div>
-          <strong>Controls:</strong>
-        </div>
-        <div>
-          <kbd style={{ padding: '5px', margin: '2px', background: '#222', color: '#fff' }}>Space</kbd> - Toggle Animation
-        </div>
-        <div>
-          <kbd style={{ padding: '5px', margin: '2px', background: '#222', color: '#fff' }}>Esc</kbd> - Deselect Planet
-        </div>
-        <div>
-          <kbd style={{ padding: '5px', margin: '2px', background: '#222', color: '#fff' }}>O</kbd> - Toggle Orbits
-        </div>
-      </div>
       {selectedPlanet && (
         <div style={{
           position: 'absolute',
@@ -881,15 +857,7 @@ const SolarSystemSimulation: React.FC = () => {
           </div>
         </div>
       )}
-      {/* Texture debug overlay (temporary; remove when satisfied) */}
-      {process.env.NODE_ENV !== 'production' && !!Object.keys(textureDebug).length && (
-        <div style={{position:'absolute', top:10, left:10, background:'rgba(0,0,0,0.55)', padding:'8px', fontSize:'11px', color:'#fff', maxWidth:'220px', lineHeight:1.3, fontFamily:'monospace', zIndex:200}}>
-          <div style={{fontWeight:'bold', marginBottom:4}}>Texture Status</div>
-          {Object.entries(textureDebug).map(([k,v]) => (
-            <div key={k} style={{color: v==='fallback'? '#ff6666':'#66ff99'}}>{k}: {v==='fallback'? 'fallback' : v.replace('/solar-textures/','')}</div>
-          ))}
-        </div>
-      )}
+      {/* Texture debug overlay removed */}
     </div>
   );
 };
