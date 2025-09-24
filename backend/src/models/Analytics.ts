@@ -331,26 +331,17 @@ const userActivitySchema = new Schema<IUserActivity>(
       type: String,
       required: true,
       enum: [
-        'login',
-        'logout',
-        'page_view',
-        'page_focus',
-        'page_blur',
-        'page_time',
-        'feature_click',
-        'user_active',
-        'mission_start',
-        'mission_complete',
-        'mission_fail',
-        'course_start',
-        'course_complete',
-        'quiz_attempt',
-        'quiz_complete',
-        'forum_post',
-        'forum_reply',
-        'mission_share',
-        'user_follow',
-        'like_post',
+        // Session & navigation
+        'login','logout','page_view','page_focus','page_blur','page_time','page_unload',
+        // Generic engagement
+        'feature_click','user_active','performance_metrics',
+        // Missions lifecycle
+        'mission_start','mission_complete','mission_fail','mission_view','mission_list','view_list',
+        // Learning
+        'course_start','course_complete','quiz_attempt','quiz_complete',
+        // Community
+        'forum_post','forum_reply','mission_share','user_follow','like_post',
+        // Reporting / exports
         'download_report'
       ],
     },

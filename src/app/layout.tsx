@@ -19,7 +19,11 @@ export const metadata: Metadata = {
   description: "Interactive space exploration and astronaut training platform",
   keywords: "space, missions, astronaut, training, exploration, NASA, ISS",
   authors: [{ name: "Space Mission Platform Team" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

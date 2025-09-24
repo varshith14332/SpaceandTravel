@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useTheme, getThemeClasses } from '@/contexts/ThemeContext';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';

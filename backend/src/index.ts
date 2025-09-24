@@ -2,6 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db';
 import analyticsRoutes from './routes/analyticsRoutes';
+import missionRoutes from './routes/missionRoutes';
+import trainingRoutes from './routes/trainingRoutes';
+import leaderboardRoutes from './routes/leaderboardRoutes';
+import communityRoutes from './routes/communityRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,6 +20,10 @@ connectDB();
 
 // Routes
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/missions', missionRoutes);
+app.use('/api/training', trainingRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/community', communityRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

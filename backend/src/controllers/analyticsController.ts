@@ -157,13 +157,41 @@ export class AnalyticsController {
 
       const activities: Array<InstanceType<typeof UserActivity>> = [];
 
+      // Allowed actions list sourced from model; keep in sync if updated
+      const allowedActions = new Set([
+        'login','logout','page_view','page_focus','page_blur','page_time','page_unload',
+        'feature_click','user_active','performance_metrics',
+        'mission_start','mission_complete','mission_fail','mission_view','mission_list','view_list',
+        'course_start','course_complete','quiz_attempt','quiz_complete',
+        'forum_post','forum_reply','mission_share','user_follow','like_post','download_report'
+      ]);
+
+      // Simple normalization / mapping for legacy or UI-specific labels
+      const normalizeAction = (raw: string): string => {
+        const map: Record<string,string> = {
+          'mission_list_open': 'mission_list',
+          'missions_list': 'mission_list',
+          'list_view': 'view_list',
+          'perf_metrics': 'performance_metrics'
+        };
+        return map[raw] || raw;
+      };
+
       for (const eventData of eventsToProcess) {
-        const { action, resource, metadata = {} } = eventData;
+        let { action, resource, metadata = {} } = eventData;
+        action = normalizeAction(action);
 
         // Validate required fields for each event
         if (!action || !resource) {
           console.warn(`Skipping invalid event - action: ${action}, resource: ${resource}`);
           continue;
+        }
+
+        if (!allowedActions.has(action)) {
+          // Downgrade unknown actions to a generic feature_click with context
+            console.warn(`Unknown activity action '${action}' received. Storing as feature_click.`);
+            metadata = { ...metadata, originalAction: action };
+            action = 'feature_click';
         }
 
         const activity = new UserActivity({
