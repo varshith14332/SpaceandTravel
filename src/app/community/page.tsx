@@ -91,7 +91,7 @@ export default function CommunityPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
   const [forumCategory, setForumCategory] = useState('all');
   const [missionDifficulty, setMissionDifficulty] = useState('all');
-  const [leaderboardType, setLeaderboardType] = useState('reputation');
+  const [leaderboardType] = useState('reputation');
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('newest');
@@ -347,6 +347,7 @@ export default function CommunityPage() {
 
   // Enhanced filtering and sorting
   const filteredContent = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let filtered: any[] = [];
     
     if (activeTab === 'forum') {

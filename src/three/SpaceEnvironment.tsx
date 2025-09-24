@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useRef, useMemo, Suspense } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Stars, OrbitControls, Sphere, Ring, Html } from '@react-three/drei'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Stars, OrbitControls, Ring, Html } from '@react-three/drei'
 import { EffectComposer, Bloom, Noise, ChromaticAberration } from '@react-three/postprocessing'
 import * as THREE from 'three'
 
@@ -114,7 +114,7 @@ function SolarSystem() {
       <Sun />
       
       {/* Planets */}
-      {planets.map((planet, index) => (
+      {planets.map((planet) => (
         <Planet key={planet.name} {...planet} />
       ))}
     </group>

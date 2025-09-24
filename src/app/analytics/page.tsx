@@ -4,8 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Mock theme context for demonstration
-const useTheme = () => ({ theme: 'dark' });
-const getThemeClasses = (theme: string) => ({
+const getThemeClasses = () => ({
   background: 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900',
   text: 'text-white'
 });
@@ -94,9 +93,9 @@ const analytics = {
     ]
   }),
   getISSPosition: async () => ({ latitude: 25.7617, longitude: -80.1918 }),
-  track: (event: string, path: string, data?: any) => console.log('Tracking:', event, path, data),
+  track: (event: string, path: string, data?: Record<string, unknown>) => console.log('Tracking:', event, path, data),
   trackError: (error: Error, context: string) => console.error('Error tracked:', error, context),
-  generateReport: async (options: any) => ({ data: 'mock report data' })
+  generateReport: async (options: Record<string, unknown>) => ({ data: 'mock report data' })
 };
 
 interface AnalyticsData {
@@ -220,8 +219,7 @@ const TouchButton = ({
 };
 
 export default function AnalyticsPage() {
-  const { theme } = useTheme();
-  const themeClasses = getThemeClasses(theme);
+  const themeClasses = getThemeClasses();
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [liveMetrics, setLiveMetrics] = useState<LiveMetrics | null>(null);
   const [issPosition, setISSPosition] = useState<{ lat: number; lon: number } | null>(null);
@@ -724,7 +722,7 @@ export default function AnalyticsPage() {
                 transition={{ delay: 0.6 + index * 0.1 }}
               >
                 <TouchButton
-                  onClick={() => setActiveCategory(category.key as any)}
+                  onClick={() => setActiveCategory(category.key as 'overview' | 'users' | 'learning' | 'missions' | 'community' | 'live')}
                   variant={activeCategory === category.key ? 'primary' : 'secondary'}
                   size="sm"
                   className={`flex items-center space-x-2 ${

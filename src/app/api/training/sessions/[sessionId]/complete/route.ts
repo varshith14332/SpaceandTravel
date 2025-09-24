@@ -4,10 +4,10 @@ const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5000/api';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { sessionId: string } }
+  { params }: { params: Promise<{ sessionId: string }> }
 ) {
   try {
-    const { sessionId } = params;
+    const { sessionId } = await params;
     const body = await req.json();
     
     console.log('API Route - Complete Training:', {

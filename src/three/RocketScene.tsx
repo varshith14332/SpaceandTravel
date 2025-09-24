@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Text, Trail, Html } from '@react-three/drei'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls, Trail, Html } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 
@@ -278,7 +278,7 @@ interface RocketSceneProps {
   showControls?: boolean
 }
 
-export default function RocketScene({ autoLaunch: _autoLaunch = false, showControls = true }: RocketSceneProps) {
+export default function RocketScene({ showControls = true }: RocketSceneProps) {
   return (
     <div className="w-full h-screen relative overflow-hidden">
       <Canvas

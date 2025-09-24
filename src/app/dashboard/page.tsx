@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
@@ -300,9 +300,10 @@ export default function SpaceDashboard() {
       </div>
     </motion.div>
   ))
+  
+  StatCard.displayName = 'StatCard'
 
-  const NavigationButton = React.memo(({ view, active, onClick, icon, label }: {
-    view: string
+  const NavigationButton = React.memo(({ active, onClick, icon, label }: {
     active: boolean
     onClick: () => void
     icon: string
@@ -333,6 +334,8 @@ export default function SpaceDashboard() {
       )}
     </motion.button>
   ))
+  
+  NavigationButton.displayName = 'NavigationButton'
 
   if (isLoading) {
     return (
@@ -437,28 +440,24 @@ export default function SpaceDashboard() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <NavigationButton
-              view="overview"
               active={activeView === 'overview'}
               onClick={() => setActiveView('overview')}
               icon="🌍"
               label="Mission Overview"
             />
             <NavigationButton
-              view="iss"
               active={activeView === 'iss'}
               onClick={() => setActiveView('iss')}
               icon="🛰️"
               label="ISS Tracking"
             />
             <NavigationButton
-              view="satellites"
               active={activeView === 'satellites'}
               onClick={() => setActiveView('satellites')}
               icon="📡"
               label="Satellites"
             />
             <NavigationButton
-              view="debris"
               active={activeView === 'debris'}
               onClick={() => setActiveView('debris')}
               icon="🛑"
@@ -654,7 +653,7 @@ export default function SpaceDashboard() {
                     <div className="text-center">
                       <div className="text-6xl mb-4 opacity-50">🌍</div>
                       <div className="text-xl text-gray-400 mb-2">Globe Visualization Disabled</div>
-                      <div className="text-sm text-gray-500">Click "Enable Globe" to view 3D tracking</div>
+                      <div className="text-sm text-gray-500">Click &quot;Enable Globe&quot; to view 3D tracking</div>
                     </div>
                   </div>
                 )}

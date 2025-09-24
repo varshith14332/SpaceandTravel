@@ -16,17 +16,13 @@ interface ChatSettings {
 }
 
 export default function ChatPage() {
-  const [settings, setSettings] = useState<ChatSettings>({
-    isMinimized: false,
-    theme: 'dark'
-  })
   const [isApiRunning, setIsApiRunning] = useState<boolean | null>(null)
 
   const checkApiStatus = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/ai/health')
       setIsApiRunning(response.ok)
-    } catch (error) {
+    } catch {
       setIsApiRunning(false)
     }
   }

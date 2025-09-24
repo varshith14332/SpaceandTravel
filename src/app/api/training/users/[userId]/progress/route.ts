@@ -4,10 +4,10 @@ const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:5000/api';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
     
     const response = await fetch(`${API_BASE_URL}/training/users/${userId}/progress`, {
       method: 'GET',
